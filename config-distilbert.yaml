@@ -1,0 +1,13 @@
+cuda_index: 0
+
+dataloader_seed: 62
+data_path: ./data/SMSSpamCollection
+text_length: 32
+batch_size: 16
+val_ratio: 0.2
+num_labels: 2
+
+pretrained_model: distilbert-base-uncased
+learning_rate: 5e-5
+eps: 1e-08
+epochs: 4
