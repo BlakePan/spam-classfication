@@ -1,4 +1,5 @@
 import argparse
+import datetime
 
 import numpy as np
 import pandas as pd
@@ -6,10 +7,10 @@ import torch
 import yaml
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
+from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
+                              TensorDataset)
 from tqdm import tqdm
 from transformers import AutoTokenizer
-import datetime
 
 
 def get_timestamp():
@@ -208,8 +209,8 @@ def main(args):
     # Import model
     pretrained_model = config_data.get("pretrained_model")
     num_labels = config_data.get("num_labels")
-    learning_rate = config_data.get("learning_rate")
-    eps = config_data.get("eps")
+    learning_rate = float(config_data.get("learning_rate"))
+    eps = float(config_data.get("eps"))
     model_res = import_model(
         pretrained_model, num_labels, learning_rate=learning_rate, eps=eps
     )
@@ -224,8 +225,8 @@ def main(args):
     dataloader_seed = config_data.get("dataloader_seed")
     val_ratio = config_data.get("val_ratio")
     batch_size = config_data.get("batch_size")
-    sentences = data_res.get(sentences)
-    labels = data_res.get(labels)
+    sentences = data_res.get("sentences")
+    labels = data_res.get("labels")
     dataloader_res = prepare_dataloader(
         pretrained_model,
         max_length,
@@ -238,7 +239,7 @@ def main(args):
 
     # Setup device
     if torch.cuda.is_available():
-        cuda_index = config_data.get(cuda_index, "0")
+        cuda_index = config_data.get("cuda_index", "0")
         device = torch.device(f"cuda:{cuda_index}")
         model.cuda()
     else:
@@ -261,14 +262,12 @@ def main(args):
         print("------")
 
     # Save model
-    model_path = f"{pretrained_model}-{get_timestamp()}.pt"
+    model_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}.pt"
     torch.save(model.state_dict(), model_path)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="A script to demonstrate argparse usage"
-    )
+    parser = argparse.ArgumentParser()
 
     # Add argument definitions
     parser.add_argument("-c", "--config", help="Path to the config file", required=True)
