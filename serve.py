@@ -34,11 +34,11 @@ class ModelHandler:
         )
 
         # Make predictions
-        t1 = time.time()
         input_ids = inputs["input_ids"]
         attention_masks = inputs["attention_mask"]
         device = self.loaded_model.device
 
+        t1 = time.time()
         with torch.no_grad():
             outputs = self.loaded_model(
                 input_ids.to(device), attention_mask=attention_masks.to(device)
