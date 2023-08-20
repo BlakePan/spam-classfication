@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.model_selection import train_test_split
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
                               TensorDataset)
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
@@ -245,21 +246,38 @@ def main(args):
     else:
         device = torch.device("cpu")
 
+    # Init tensorboard writer
+    writer = SummaryWriter() if args.enable_tensorboard else None
+
     # Training loop
     epochs = config_data.get("epochs", 4)
     train_dataloader = dataloader_res.get("train_dataloader")
     val_dataloader = dataloader_res.get("val_dataloader")
-    for _ in tqdm(range(epochs), desc="Epoch"):
+    for epoch in tqdm(range(epochs), desc="Epoch"):
         train_loss = train_steps(model, train_dataloader, optimizer, device)
         val_results = val_steps(model, val_dataloader, device)
+        avg_accuracy = np.mean(val_results["accuracy"])
+        avg_precision = np.mean(val_results["precision"])
+        avg_recall = np.mean(val_results["recall"])
+        avg_f1_score = np.mean(val_results["f1_score"])
 
         print(f"Train Loss: {train_loss}")
         print("Eval metrics")
-        print("Accuracy: {}".format(np.mean(val_results["accuracy"])))
-        print("Precision: {}".format(np.mean(val_results["precision"])))
-        print("Recall: {}".format(np.mean(val_results["recall"])))
-        print("F1_score: {}".format(np.mean(val_results["f1_score"])))
+        print(f"Accuracy: {avg_accuracy}")
+        print(f"Precision: {avg_precision}")
+        print(f"Recall: {avg_recall}")
+        print(f"F1_score: {avg_f1_score}")
         print("------")
+
+        if writer is not None:
+            writer.add_scalar("Loss/train", train_loss, epoch)
+            writer.add_scalar("Accuracy/val", avg_accuracy, epoch)
+            writer.add_scalar("Precision/val", avg_precision, epoch)
+            writer.add_scalar("Recall/val", avg_recall, epoch)
+            writer.add_scalar("F1_score/val", avg_f1_score, epoch)
+
+    if writer is not None:
+        writer.close()
 
     # Save model
     model_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}.pt"
@@ -271,6 +289,9 @@ if __name__ == "__main__":
 
     # Add argument definitions
     parser.add_argument("-c", "--config", help="Path to the config file", required=True)
+    parser.add_argument(
+        "-tb", "--enable_tensorboard", help="Enable tensorboard", action="store_true"
+    )
 
     args = parser.parse_args()
     main(args)
