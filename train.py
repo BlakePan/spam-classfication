@@ -40,7 +40,6 @@ def load_data(data_path):
 
 
 def get_encoding(tokenizer, sentence, max_length):
-    # TODO: share for serving
     return tokenizer.encode_plus(
         sentence,
         add_special_tokens=True,
@@ -132,7 +131,7 @@ def import_model(pretrained_model, num_labels, learning_rate=5e-5, eps=1e-08):
 def cal_metrics(preds: np.array, labels: np.array):
     acc = accuracy_score(labels, preds)
     prec, recall, f1, _ = precision_recall_fscore_support(
-        labels, preds, average="micro"
+        labels, preds, average="binary", zero_division=0
     )
 
     return {"accuracy": acc, "precision": prec, "recall": recall, "f1_score": f1}
@@ -170,6 +169,7 @@ def val_steps(model, val_dataloader, device):
     precision = []
     recall = []
     f1_score = []
+    loss = 0
 
     for batch in val_dataloader:
         batch = tuple(t.to(device) for t in batch)
@@ -177,7 +177,11 @@ def val_steps(model, val_dataloader, device):
 
         with torch.no_grad():
             # Forward pass
-            eval_output = model(token_ids, attention_mask=attention_masks)
+            eval_output = model(
+                token_ids, attention_mask=attention_masks, labels=labels
+            )
+
+        loss += eval_output.loss.item()
 
         # Cal metrics
         logits = eval_output.logits.detach().cpu().numpy()
@@ -195,6 +199,7 @@ def val_steps(model, val_dataloader, device):
             f1_score.append(metrics["f1_score"])
 
     return {
+        "loss": loss,
         "accuracy": accuracy,
         "precision": precision,
         "recall": recall,
@@ -256,12 +261,15 @@ def main(args):
     for epoch in tqdm(range(epochs), desc="Epoch"):
         train_loss = train_steps(model, train_dataloader, optimizer, device)
         val_results = val_steps(model, val_dataloader, device)
+        val_loss = val_results.get("loss")
         avg_accuracy = np.mean(val_results["accuracy"])
         avg_precision = np.mean(val_results["precision"])
         avg_recall = np.mean(val_results["recall"])
         avg_f1_score = np.mean(val_results["f1_score"])
 
+        print()
         print(f"Train Loss: {train_loss}")
+        print(f"Val Loss: {val_loss}")
         print("Eval metrics")
         print(f"Accuracy: {avg_accuracy}")
         print(f"Precision: {avg_precision}")
@@ -271,6 +279,7 @@ def main(args):
 
         if writer is not None:
             writer.add_scalar("Loss/train", train_loss, epoch)
+            writer.add_scalar("Loss/val", val_loss, epoch)
             writer.add_scalar("Accuracy/val", avg_accuracy, epoch)
             writer.add_scalar("Precision/val", avg_precision, epoch)
             writer.add_scalar("Recall/val", avg_recall, epoch)
@@ -280,8 +289,8 @@ def main(args):
         writer.close()
 
     # Save model
-    model_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}.pt"
-    torch.save(model.state_dict(), model_path)
+    model_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}"
+    model.save_pretrained(f"./{model_path}", from_pt=True)
 
 
 if __name__ == "__main__":

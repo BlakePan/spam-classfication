@@ -4,6 +4,7 @@ import gradio as gr
 import torch
 from transformers import AutoTokenizer
 import yaml
+from train import get_encoding
 
 
 class ModelHandler:
@@ -27,9 +28,7 @@ class ModelHandler:
             raise ValueError("Model is not loaded")
 
         # Tokenize and process the input
-        inputs = self.tokenizer(
-            text, return_tensors="pt", padding=True, truncation=True
-        )
+        inputs = get_encoding(self.tokenizer, text, max_length=32)
 
         # Make predictions
         input_ids = inputs["input_ids"]
