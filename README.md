@@ -79,7 +79,7 @@ Here are some samples from the validation set that you could try for the demo.
 3: k will do, addie & amp ; i are doing some art so i'll be here when you get home<br>
 4: aiyo please u got time meh.<be>
 
-<img width="1429" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/0bfaa630-38cf-433b-bae9-62002eab8cbe">
+<img width="1283" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/9d62c431-bcca-41d4-84e2-e856d3373460">
 
 
 ### Spams
@@ -89,5 +89,5 @@ Here are some samples from the validation set that you could try for the demo.
 3: sms services for your inclusive text credits pls gotto www. comuk. net login 3qxj9 unsubscribe with<br>
 4: free for 1st week! no1 nokia tone 4 ur mob every week just txt nokia to 8007 get txting and tell ur mates www.<br>
 
-<img width="1437" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/ab02345a-26f6-4ec4-a697-9259c1525b3f">
+<img width="1274" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/28da69a7-d2b4-4ce1-95ee-f75f84017c7d">
 
