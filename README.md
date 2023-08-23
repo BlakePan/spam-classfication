@@ -22,7 +22,14 @@ To train `distilbert-base-uncased` for spam classification by running:
 ```
 $ python train.py -c config-distilbert.yaml
 ```
-You can modify hyperparameters in those config files.
+You can modify hyperparameters in those config files.<br><br>
+
+To enable the Tensorboard writer, please add `-tb` arg in the training command.<br>
+For example:
+```
+$ python train.py -c config-bert.yaml -tb
+```
+
 
 When training starts, you should be able to see the progress and metrics on the screen:
 ![image](https://github.com/BlakePan/spam-classfication/assets/9764354/e5d295a3-4043-444e-ba6a-d7fd28c71989)
