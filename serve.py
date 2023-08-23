@@ -71,13 +71,13 @@ class ModelHandler:
         # Load tokenizer and model
         if model_name == "bert":
             pre_train = "textattack/bert-base-uncased-yelp-polarity"
-            fine_tune = "./textattack_bert-base-uncased-yelp-polarity-2023-08-20-10-09"
+            fine_tune = "./models/textattack_bert-base-uncased-yelp-polarity-2023-08-20-10-09"
             from transformers import BertForSequenceClassification
 
             model = BertForSequenceClassification.from_pretrained(fine_tune)
         elif model_name == "distilbert":
             pre_train = "distilbert-base-uncased"
-            fine_tune = "./distilbert-base-uncased-2023-08-20-10-17"
+            fine_tune = "./models/distilbert-base-uncased-2023-08-20-10-17"
             from transformers import DistilBertForSequenceClassification
 
             model = DistilBertForSequenceClassification.from_pretrained(fine_tune)
