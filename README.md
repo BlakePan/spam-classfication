@@ -32,7 +32,7 @@ $ python train.py -c config-bert.yaml -tb
 
 
 When training starts, you should be able to see the progress and metrics on the screen:
-![image](https://github.com/BlakePan/spam-classfication/assets/9764354/44bf5ac0-be59-47c3-945e-c3a603ac3085)
+![image](https://github.com/BlakePan/spam-classfication/assets/9764354/fcabdb53-e39d-4bf1-b52b-9c0ba9283015)
 
 The experiment was run on colab, you can check the notebook in the below link:
 https://colab.research.google.com/drive/1QmWNf6Fo46Qbw0beCvUUJmyQZNZD2bs0?usp=sharing
@@ -55,8 +55,7 @@ Then, you should be able to see the Tensorboard on the browser
 In this project, we also provided fine-tuned model weights.<br>
 You can download those files by using the below commands and try demo directly without training:
 ```
-$ cd models
-$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1ZcqqCOzOn72X9cGdYmCAcGVn_I9BMWN4&export=download&authuser=0&confirm=t&uuid=cdfb82be-d923-46d2-9e09-60c4a6e6b60b&at=APZUnTVF-Iw4qc8ADNLy-LY_Mb6i:1692775613106' -O models.zip
+$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1-1BFzt6Kz8bwrvC3L92kXU1o-K561fhU&export=download&authuser=0&confirm=t&uuid=03461ef5-822f-426a-8d7b-86d0aa818367&at=APZUnTWEI8SYLbUKh2_vLEcAk0RV:1692795900375' -O models.zip
 $ unzip models.zip
 ```
 
