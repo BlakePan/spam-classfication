@@ -32,7 +32,7 @@ $ python train.py -c config-bert.yaml -tb
 
 
 When training starts, you should be able to see the progress and metrics on the screen:
-![image](https://github.com/BlakePan/spam-classfication/assets/9764354/e5d295a3-4043-444e-ba6a-d7fd28c71989)
+![image](https://github.com/BlakePan/spam-classfication/assets/9764354/44bf5ac0-be59-47c3-945e-c3a603ac3085)
 
 The experiment was run on colab, you can check the notebook in the below link:
 https://colab.research.google.com/drive/1QmWNf6Fo46Qbw0beCvUUJmyQZNZD2bs0?usp=sharing
