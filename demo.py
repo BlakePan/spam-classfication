@@ -3,14 +3,12 @@ import time
 import gradio as gr
 import torch
 from transformers import AutoTokenizer
-
-# test sample:
-# ham: "hello, it's me Blake.",
-# spam: "call 09124019014 if your number matches  to receive your £350 award."
+import yaml
 
 
 class ModelHandler:
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.loaded_model = None
         self.loaded_model_name = None
         self.tokenizer = None
@@ -71,19 +69,20 @@ class ModelHandler:
         # Load tokenizer and model
         if model_name == "bert":
             pre_train = "textattack/bert-base-uncased-yelp-polarity"
-            fine_tune = "./models/textattack_bert-base-uncased-yelp-polarity-2023-08-20-10-09"
+            fine_tune = self.config.get("bert_finetune_path")
             from transformers import BertForSequenceClassification
-
             model = BertForSequenceClassification.from_pretrained(fine_tune)
         elif model_name == "distilbert":
             pre_train = "distilbert-base-uncased"
-            fine_tune = "./models/distilbert-base-uncased-2023-08-20-10-17"
+            fine_tune = self.config.get("distilbert_finetune_path")
             from transformers import DistilBertForSequenceClassification
-
             model = DistilBertForSequenceClassification.from_pretrained(fine_tune)
         else:
             raise ValueError("model_name is not supportted")
-
+        # total_params = sum(p.numel() for p in model.parameters())
+        # print(f"Number of parameters of {model_name}: {total_params}")
+        
+        # Init tokenizer
         tokenizer = AutoTokenizer.from_pretrained(pre_train)
 
         # Set model to evaluation mode
@@ -99,7 +98,9 @@ class ModelHandler:
         self.tokenizer = tokenizer
 
 
-model_handler = ModelHandler()
+with open("./config-demo.yaml", "r") as f:
+    config = yaml.safe_load(f)
+model_handler = ModelHandler(config)
 
 iface = gr.Interface(
     fn=model_handler.predict_spam,
