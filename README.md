@@ -32,7 +32,7 @@ $ python train.py -c config-bert.yaml -tb
 
 
 When training starts, you should be able to see the progress and metrics on the screen:
-![image](https://github.com/BlakePan/spam-classfication/assets/9764354/e5d295a3-4043-444e-ba6a-d7fd28c71989)
+![image](https://github.com/BlakePan/spam-classfication/assets/9764354/fcabdb53-e39d-4bf1-b52b-9c0ba9283015)
 
 The experiment was run on colab, you can check the notebook in the below link:
 https://colab.research.google.com/drive/1QmWNf6Fo46Qbw0beCvUUJmyQZNZD2bs0?usp=sharing
@@ -55,8 +55,7 @@ Then, you should be able to see the Tensorboard on the browser
 In this project, we also provided fine-tuned model weights.<br>
 You can download those files by using the below commands and try demo directly without training:
 ```
-$ cd models
-$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1ZcqqCOzOn72X9cGdYmCAcGVn_I9BMWN4&export=download&authuser=0&confirm=t&uuid=cdfb82be-d923-46d2-9e09-60c4a6e6b60b&at=APZUnTVF-Iw4qc8ADNLy-LY_Mb6i:1692775613106' -O models.zip
+$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1-1BFzt6Kz8bwrvC3L92kXU1o-K561fhU&export=download&authuser=0&confirm=t&uuid=03461ef5-822f-426a-8d7b-86d0aa818367&at=APZUnTWEI8SYLbUKh2_vLEcAk0RV:1692795900375' -O models.zip
 $ unzip models.zip
 ```
 
@@ -80,7 +79,7 @@ Here are some samples from the validation set that you could try for the demo.
 3: k will do, addie & amp ; i are doing some art so i'll be here when you get home<br>
 4: aiyo please u got time meh.<be>
 
-<img width="1429" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/0bfaa630-38cf-433b-bae9-62002eab8cbe">
+<img width="1283" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/9d62c431-bcca-41d4-84e2-e856d3373460">
 
 
 ### Spams
@@ -90,5 +89,5 @@ Here are some samples from the validation set that you could try for the demo.
 3: sms services for your inclusive text credits pls gotto www. comuk. net login 3qxj9 unsubscribe with<br>
 4: free for 1st week! no1 nokia tone 4 ur mob every week just txt nokia to 8007 get txting and tell ur mates www.<br>
 
-<img width="1437" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/ab02345a-26f6-4ec4-a697-9259c1525b3f">
+<img width="1274" alt="image" src="https://github.com/BlakePan/spam-classfication/assets/9764354/28da69a7-d2b4-4ce1-95ee-f75f84017c7d">
 
