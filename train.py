@@ -112,6 +112,19 @@ def import_model(pretrained_model, num_labels, learning_rate=5e-5, eps=1e-08):
         model = BertForSequenceClassification.from_pretrained(
             pretrained_model, num_labels=num_labels
         )
+
+        # # exp: set dropout rate for last layer
+        # from torch import nn
+        # model.dropout = nn.Dropout(0.3)
+
+        # exp: set dropout rate for bert
+        # from transformers import BertConfig
+        # config = BertConfig.from_pretrained(
+        #     pretrained_model, num_labels=num_labels, hidden_dropout_prob=0.3
+        # )
+        # model = BertForSequenceClassification.from_pretrained(
+        #     pretrained_model, config=config
+        # )
     elif pretrained_model == "distilbert-base-uncased":
         from transformers import DistilBertForSequenceClassification
 
@@ -265,6 +278,11 @@ def main(args):
     train_dataloader = dataloader_res.get("train_dataloader")
     val_dataloader = dataloader_res.get("val_dataloader")
     for epoch in tqdm(range(epochs), desc="Epoch"):
+        # # exp: fix bert param after epoch2
+        # if epoch > 2:
+        #     for param in model.bert.parameters():
+        #         param.requires_grad = False
+
         # Train and validate
         train_loss = train_steps(model, train_dataloader, optimizer, device)
         val_results = val_steps(model, val_dataloader, device)
@@ -311,10 +329,8 @@ def main(args):
                 or avg_f1_score > prev_val_f1
             )
 
-        metrics_info = (
-            "loss_{:.4f}-acc_{:.4f}-prec_{:.4f}-recall_{:.4f}-f1_{:.4f}".format(
-                val_loss, avg_accuracy, avg_precision, avg_recall, avg_f1_score
-            )
+        metrics_info = "epoch_{}-loss_{:.4f}-acc_{:.4f}-prec_{:.4f}-recall_{:.4f}-f1_{:.4f}".format(
+            epoch, val_loss, avg_accuracy, avg_precision, avg_recall, avg_f1_score
         )
 
         if trigger:
