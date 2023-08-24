@@ -3,11 +3,11 @@ cuda_index: 0
 dataloader_seed: 62
 data_path: ./data/SMSSpamCollection
 text_length: 32
-batch_size: 16
+batch_size: 32
 val_ratio: 0.2
 num_labels: 2
 
 pretrained_model: textattack/bert-base-uncased-yelp-polarity
-learning_rate: 1e-5
+learning_rate: 5e-5
 eps: 1e-08
-epochs: 3
+epochs: 30
