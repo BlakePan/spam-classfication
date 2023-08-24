@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import os
 
 import numpy as np
 import pandas as pd
@@ -107,13 +108,11 @@ def prepare_dataloader(
 def import_model(pretrained_model, num_labels, learning_rate=5e-5, eps=1e-08):
     if pretrained_model == "textattack/bert-base-uncased-yelp-polarity":
         from transformers import BertForSequenceClassification
-
         model = BertForSequenceClassification.from_pretrained(
             pretrained_model, num_labels=num_labels
         )
     elif pretrained_model == "distilbert-base-uncased":
         from transformers import DistilBertForSequenceClassification
-
         model = DistilBertForSequenceClassification.from_pretrained(
             pretrained_model, num_labels=num_labels
         )
@@ -254,19 +253,26 @@ def main(args):
     # Init tensorboard writer
     writer = SummaryWriter() if args.enable_tensorboard else None
 
+    # Init folder for saving model
+    save_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}"
+    if not os.path.exists(save_path):
+        os.makedirs(save_path, exist_ok=True)
+
     # Training loop
     epochs = config_data.get("epochs", 4)
     train_dataloader = dataloader_res.get("train_dataloader")
     val_dataloader = dataloader_res.get("val_dataloader")
     for epoch in tqdm(range(epochs), desc="Epoch"):
+        # Train and validate
         train_loss = train_steps(model, train_dataloader, optimizer, device)
         val_results = val_steps(model, val_dataloader, device)
+
+        # Show metrics
         val_loss = val_results.get("loss")
         avg_accuracy = np.mean(val_results["accuracy"])
         avg_precision = np.mean(val_results["precision"])
         avg_recall = np.mean(val_results["recall"])
         avg_f1_score = np.mean(val_results["f1_score"])
-
         print()
         print(f"Train Loss: {train_loss}")
         print(f"Val Loss: {val_loss}")
@@ -277,6 +283,7 @@ def main(args):
         print(f"F1_score: {avg_f1_score}")
         print("------")
 
+        # Log to tensorboard
         if writer is not None:
             writer.add_scalar("Loss/train", train_loss, epoch)
             writer.add_scalar("Loss/val", val_loss, epoch)
@@ -285,12 +292,42 @@ def main(args):
             writer.add_scalar("Recall/val", avg_recall, epoch)
             writer.add_scalar("F1_score/val", avg_f1_score, epoch)
 
+        # Save model
+        if epoch == 0:
+            prev_val_loss = val_loss
+            prev_val_acc = avg_accuracy
+            prev_val_prec = avg_precision
+            prev_val_recall = avg_recall
+            prev_val_f1 = avg_f1_score
+            trigger = False
+        else:
+            trigger = (
+                val_loss < prev_val_loss
+                or avg_accuracy > prev_val_acc
+                or avg_precision > prev_val_prec
+                or avg_recall > prev_val_recall
+                or avg_f1_score > prev_val_f1
+            )
+
+        metrics_info = "epoch_{}-loss_{:.4f}-acc_{:.4f}-prec_{:.4f}-recall_{:.4f}-f1_{:.4f}".format(
+            epoch, val_loss, avg_accuracy, avg_precision, avg_recall, avg_f1_score
+        )
+
+        if trigger:
+            print(f"[SAVE]: {metrics_info}")
+            model.save_pretrained(f"{save_path}/{metrics_info}", from_pt=True)
+
+        prev_val_loss = min(prev_val_loss, val_loss)
+        prev_val_acc = max(prev_val_acc, avg_accuracy)
+        prev_val_prec = max(prev_val_prec, avg_precision)
+        prev_val_recall = max(prev_val_recall, avg_recall)
+        prev_val_f1 = max(prev_val_f1, avg_f1_score)
+
     if writer is not None:
         writer.close()
 
     # Save model
-    model_path = f"{pretrained_model.replace('/', '_')}-{get_timestamp()}"
-    model.save_pretrained(f"./{model_path}", from_pt=True)
+    model.save_pretrained(f"{save_path}/{metrics_info}", from_pt=True)
 
 
 if __name__ == "__main__":
