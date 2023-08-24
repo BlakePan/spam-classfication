@@ -55,7 +55,7 @@ Then, you should be able to see the Tensorboard on the browser
 In this project, we also provided fine-tuned model weights.<br>
 You can download those files by using the below commands and try demo directly without training:
 ```
-$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1-1BFzt6Kz8bwrvC3L92kXU1o-K561fhU&export=download&authuser=0&confirm=t&uuid=03461ef5-822f-426a-8d7b-86d0aa818367&at=APZUnTWEI8SYLbUKh2_vLEcAk0RV:1692795900375' -O models.zip
+$ wget –no-check-certificate 'https://drive.usercontent.google.com/download?id=1-xCqfqJqOouxPQmeyvtowa9Cg64lAZdm&export=download&authuser=0&confirm=t&uuid=3b24a51f-e24d-4c46-b7fa-52a660109a4d&at=APZUnTV-bGoABfutQpN4NcWsFmjG:1692866582619' -O models.zip
 $ unzip models.zip
 ```
 
