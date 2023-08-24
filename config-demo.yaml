@@ -1,2 +1,2 @@
-bert_finetune_path: ./models/textattack_bert-base-uncased-yelp-polarity-2023-08-23-12-57/
-distilbert_finetune_path: ./models/distilbert-base-uncased-2023-08-23-13-00/
+bert_finetune_path: ./models/textattack_bert-base-uncased-yelp-polarity-2023-08-24-05-13/loss_0.6094-acc_0.9946-prec_0.9895-recall_0.9738-f1_0.9798/
+distilbert_finetune_path: ./models/distilbert-base-uncased-2023-08-24-07-59/epoch_3-loss_0.7849-acc_0.9964-prec_1.0000-recall_0.9745-f1_0.9842/
