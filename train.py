@@ -108,38 +108,14 @@ def prepare_dataloader(
 def import_model(pretrained_model, num_labels, learning_rate=5e-5, eps=1e-08):
     if pretrained_model == "textattack/bert-base-uncased-yelp-polarity":
         from transformers import BertForSequenceClassification
-
         model = BertForSequenceClassification.from_pretrained(
             pretrained_model, num_labels=num_labels
         )
-
-        # # exp: set dropout rate for last layer
-        # from torch import nn
-        # model.dropout = nn.Dropout(0.3)
-
-        # # exp: set dropout rate for bert
-        # from transformers import BertConfig
-        # config = BertConfig.from_pretrained(
-        #     pretrained_model, num_labels=num_labels, hidden_dropout_prob=0.3
-        # )
-        # model = BertForSequenceClassification.from_pretrained(
-        #     pretrained_model, config=config
-        # )
     elif pretrained_model == "distilbert-base-uncased":
         from transformers import DistilBertForSequenceClassification
-
         model = DistilBertForSequenceClassification.from_pretrained(
             pretrained_model, num_labels=num_labels
         )
-
-        # # exp: set dropout rate for bert
-        # from transformers import BertConfig
-        # config = BertConfig.from_pretrained(
-        #     pretrained_model, num_labels=num_labels, hidden_dropout_prob=0.3
-        # )
-        # model = DistilBertForSequenceClassification.from_pretrained(
-        #     pretrained_model, config=config
-        # )
     else:
         raise Exception("Pre-trained model not support")
 
@@ -287,12 +263,6 @@ def main(args):
     train_dataloader = dataloader_res.get("train_dataloader")
     val_dataloader = dataloader_res.get("val_dataloader")
     for epoch in tqdm(range(epochs), desc="Epoch"):
-        # # exp: fix bert param after epoch2
-        # if epoch > 2:
-        #     for param in model.bert.parameters():
-        #     for param in model.distilbert.parameters():
-        #         param.requires_grad = False
-
         # Train and validate
         train_loss = train_steps(model, train_dataloader, optimizer, device)
         val_results = val_steps(model, val_dataloader, device)
