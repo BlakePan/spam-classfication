@@ -89,7 +89,7 @@ class ModelHandler:
             torch.device("cuda:0")
             model.cuda()
         else:
-            torch.device("cuda:0")
+            torch.device("cpu")
         model.eval()
 
         self.loaded_model = model
